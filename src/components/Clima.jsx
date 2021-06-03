@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Clima = ({resultado}) => {
 
     const {name, main} = resultado;
 
-    if(!name){
+    if(!name || !main){
         return null;
     }
 
@@ -19,11 +20,15 @@ const Clima = ({resultado}) => {
                     {(Number(main.temp_max) - 273.15).toFixed(2)} <span>&#8451;</span>
                 </p>
                 <p>Temperatura Mínima:
-                    {(Number(main.temp) - 273.15).toFixed(2)} <span>&#8451;</span>
+                    {(Number(main.temp_min) - 273.15).toFixed(2)} <span>&#8451;</span>
                 </p>
             </div>
         </div>
     );
+}
+
+Clima.propTypes = {
+    resultado: PropTypes.object.isRequired
 }
  
 export default Clima;

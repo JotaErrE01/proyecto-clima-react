@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Clima from "./components/Clima";
+import Error from "./components/Error";
 import Formulario from "./components/Formulario";
 import Header from "./components/header";
 import {consultarApi} from './helpers/consultarApi'
@@ -18,18 +19,27 @@ function App() {
   //state del resultado
   const [resultado, setResultado] = useState({});
 
+  const [error, setError] = useState(false);
+
   const {ciudad, pais} = busqueda;
 
   useEffect(() => { 
     
     if(consultar){
       consultarApi(ciudad, pais)
-        .then(dataClima => setResultado(dataClima));
+        .then(setResultado);
+    }
+
+    if(resultado.cod === '404'){
+      setError(true);
+    }else{
+      setError(false);
     }
 
     setConsultar(false);
 
-  }, [consultar, pais, ciudad])
+    //eslint-disable-next-line
+  }, [consultar, resultado])
 
   return (
     <>
@@ -47,9 +57,14 @@ function App() {
               />
             </div>
             <div className="col m6 s12">
-              <Clima 
-                resultado={resultado}
-              />
+              {error ? 
+                <Error
+                  msj="No hay Resultados"
+                /> :
+                <Clima 
+                  resultado={resultado}
+                />
+              }
             </div>
           </div>
         </div>
